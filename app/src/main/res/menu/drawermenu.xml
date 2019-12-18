@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item android:title="General">
+            <menu>
+                <item
+                    android:id="@+id/btnHistory"
+                    android:icon="@drawable/ic_history"
+                    android:title="@string/history"/>
+                <item
+                    android:id="@+id/btnContactUs"
+                    android:icon="@drawable/ic_contact"
+                    android:title="@string/contact_us"/>
+
+                <item
+                    android:id="@+id/btnAbout"
+                    android:icon="@drawable/ic_about_us"
+                    android:title="@string/about"/>
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+
+        <item android:title="Additional">
+            <menu>
+
+                <item
+                    android:id="@+id/btnVideos"
+                    android:icon="@drawable/ic_youtube"
+                    android:title="@string/videos"/>
+
+
+                <item
+                    android:id="@+id/btnWebsites"
+                    android:icon="@drawable/ic_website"
+                    android:title="@string/websites"/>
+
+                <item
+                    android:id="@+id/btnhotline"
+                    android:icon="@drawable/ic_hotline"
+                    android:title="@string/hotlines"/>
+
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+
+        <item android:title="Account">
+            <menu>
+                <item
+                    android:id="@+id/btnAccountSettings"
+                    android:icon="@drawable/ic_person_outline_black_24dp"
+                    android:title="@string/account_settings"/>
+
+                <item
+                    android:id="@+id/btnLogout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="@string/log_out"/>
+            </menu>
+        </item>
+    </group>
+
+</menu>

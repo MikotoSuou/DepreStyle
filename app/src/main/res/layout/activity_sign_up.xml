@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/peach"
+    tools:context="com.example.bj_pogi.deprestylefinalfinal.SignUpActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/btnExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_eks_black"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="18dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/create_your_account"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etSignUpEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email"
+                android:textColorHint="#34495e"
+                android:fontFamily="sans-serif-medium"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etSignUpPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:hint="@string/password1"
+                android:textColorHint="#34495e"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:fontFamily="sans-serif-medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_confirmpass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etConfirmPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:hint="@string/confirm_password"
+                android:textColorHint="#34495e"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:fontFamily="sans-serif-medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_fname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etSignUpFName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:hint="@string/first_name"
+                android:textColorHint="#34495e"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_lname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etSignUpLName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:hint="@string/last_name"
+                android:textColorHint="#34495e"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat">
+
+            <EditText
+                android:id="@+id/etSignUpLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#34495e"
+                android:hint="@string/location_city"
+                android:textColorHint="#34495e"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="3dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Age: "
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                android:id="@+id/numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                app:textSize="7sp"
+                app:textColor="@color/black"
+                app:backGroundColor="#608db600"
+                app:initialNumber="17"
+                app:finalNumber="30"/>
+
+        </LinearLayout>
+
+
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/gender"/>
+
+            <RadioButton
+                android:id="@+id/btnSignUpMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/male"
+                android:padding="10dp"
+                android:onClick="checkButton" />
+
+            <RadioButton
+                android:id="@+id/btnSignUpFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:text="@string/female"
+                android:onClick="checkButton"/>
+
+            <TextView
+                android:id="@+id/displayGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="1sp"
+                android:text=""
+                android:visibility="invisible"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:background="@drawable/buttonstyleround2"
+            android:text="@string/sign_up1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/already_have_an_account"
+                android:textColor="#34495e"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvLogin"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/login1"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvProfessional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="0sp"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tvNextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="0sp"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tvGetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="0sp"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tvGetTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="0sp"
+        android:visibility="invisible"/>
+
+</LinearLayout>
+    </RelativeLayout>
+</ScrollView>
