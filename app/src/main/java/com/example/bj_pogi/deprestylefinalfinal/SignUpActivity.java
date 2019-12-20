@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,9 +37,9 @@ import java.util.Locale;
 public class SignUpActivity extends AppCompatActivity{
 
     //GLOBAL
-    String currentDate, currentTime;
+    private String currentDate, currentTime;
     private long mLastClickTime;
-
+    private View view;
 
     //COMPONTENTS
     EditText etSignUpName, etSignUpEmail, etSignUpPass, etSignUpLName, etSignUpLocation, etConfirmPass;
@@ -48,10 +49,10 @@ public class SignUpActivity extends AppCompatActivity{
     RadioButton radioButton;
     TextView tvLogin, tvGetTime, tvGetDate, displayGender, tvNextDate, tvProfessional;
     ElegantNumberButton numberPicker;
-    Snackbar snackbar;
+
 
     //CLASS
-    ControllerClass mController = new ControllerClass();
+    ControllerClass mUtils;
 
     //FIREBASE
     private DatabaseReference mRef;
@@ -62,7 +63,8 @@ public class SignUpActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
+        mUtils = new ControllerClass(this);
+        view = getWindow().getDecorView().getRootView();
 
         etSignUpName = (EditText) findViewById(R.id.etSignUpFName);
         etSignUpLocation = (EditText) findViewById(R.id.etSignUpLocation);
@@ -179,11 +181,11 @@ public class SignUpActivity extends AppCompatActivity{
                         if (TextUtils.isEmpty(displayName) || TextUtils.isEmpty(email) || TextUtils.isEmpty(pass) || TextUtils.isEmpty(confirmpass)
                                 || TextUtils.isEmpty(lname) || TextUtils.isEmpty(age) || TextUtils.isEmpty(location) || TextUtils.isEmpty(gender)) {
 
-                            mController.makeToastMsg(SignUpActivity.this, Constants.COMPLETE_FORM);
+                            mUtils.makeToastMsg(SignUpActivity.this, Constants.COMPLETE_FORM);
 
                         } else if (pass.length() == 5) {
 
-                            mController.showSnackBarShortly(snackbar.getView(), Constants.PASS_SHOULD_HAVE_6_CHAR);
+                            mUtils.showSnackBarShortly(view, Constants.PASS_SHOULD_HAVE_6_CHAR);
 
                         } else if (pass.equals(confirmpass)) {
 
@@ -196,7 +198,8 @@ public class SignUpActivity extends AppCompatActivity{
 
                         } else {
 
-                            mController.showSnackBarShortly(snackbar.getView(), Constants.PASS_NOT_EQUAL);
+                            mUtils.showSnackBarShortly(view, Constants.PASS_NOT_EQUAL);
+
                         }
 
                     }
@@ -247,13 +250,13 @@ public class SignUpActivity extends AppCompatActivity{
                     mRef.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            FirebaseUser user = mAuth.getCurrentUser();
                             if(task.isSuccessful()){
                                 mRegProgress.dismiss();
 
-                                mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-
                                         if(task.isSuccessful()){
                                             Calendar c = Calendar.getInstance();
                                             String dt = DateFormat.getDateInstance(DateFormat.LONG).format(c.getTime());
@@ -267,36 +270,30 @@ public class SignUpActivity extends AppCompatActivity{
                                             SimpleDateFormat sdf2 = new SimpleDateFormat("MMMM dd, yyyy");
                                             String expirationDate = sdf2.format(c.getTime());
 
-                                            String message = "Verification sent to: " +email+ " you need to verify your account before " + expirationDate;
-                                            mController.showSnackBarWithDestroyActivity(snackbar.getView(), message, Constants.OKAY);
+                                            String message = "Verification sent to: " + email + " you need to verify your account before " + expirationDate;
+                                            mUtils.setSessionData(Constants.VERMSG, message);
+                                            mUtils.setSessionData(Constants.EVSUCC, "1");
+                                            startActivity(new Intent(SignUpActivity.this, StartActivity.class)
+                                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                            finish();
 
-                                        }
-                                        else{
-                                            String exceptionn = mController.removeFirebaseExceptionMsg(task.getException().toString());
-                                            mController.showSnackBarWithDismiss(snackbar.getView(), exceptionn, Constants.OKAY);
+                                        } else {
+                                            String exceptionn = mUtils.removeFirebaseExceptionMsg(task.getException().toString());
+                                            mUtils.showSnackBarWithDismiss(view, exceptionn, Constants.OKAY);
                                         }
                                     }
                                 });
 
-                                Intent intent = new Intent(SignUpActivity.this, StartActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-
-                            else {
-                                String exceptionn = mController.removeFirebaseExceptionMsg(task.getException().toString());
-                                mController.showSnackBarWithDismiss(snackbar.getView(), exceptionn, Constants.OKAY);
+                            } else {
+                                String exceptionn = mUtils.removeFirebaseExceptionMsg(task.getException().toString());
+                                mUtils.showSnackBarWithDismiss(view, exceptionn, Constants.OKAY);
                             }
                         }
                     });
-
-
-                }
-
-                else {
+                } else {
                     mRegProgress.hide();
-                    String exceptionn = mController.removeFirebaseExceptionMsg(task.getException().toString());
-                    mController.showSnackBarWithDismiss(snackbar.getView(), exceptionn, Constants.OKAY);
+                    String exceptionn = mUtils.removeFirebaseExceptionMsg(task.getException().toString());
+                    mUtils.showSnackBarWithDismiss(view, exceptionn, Constants.OKAY);
 
                 }
             }

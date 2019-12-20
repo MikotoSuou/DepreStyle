@@ -5,6 +5,7 @@ package com.example.bj_pogi.deprestylefinalfinal;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,8 @@ public class SplashScreen extends Activity {
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;
 
+    ControllerClass mUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,8 @@ public class SplashScreen extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+
+        mUtils = new ControllerClass(this);
 
         new Handler().postDelayed(new Runnable() {
 
@@ -36,6 +41,8 @@ public class SplashScreen extends Activity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 Intent i = new Intent(SplashScreen.this, StartActivity.class);
+                mUtils.setSessionData(Constants.VERMSG, "placeholder");
+                mUtils.setSessionData(Constants.EVSUCC, "0");
                 startActivity(i);
                 finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

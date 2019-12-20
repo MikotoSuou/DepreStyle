@@ -69,6 +69,19 @@
         <activity android:name=".FirebaseHistory" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".ControllerClass" />
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.bj_pogi.deprestylefinalfinal.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path"
+                tools:replace="android:resource" />
+        </provider>
     </application>
 
 </manifest>

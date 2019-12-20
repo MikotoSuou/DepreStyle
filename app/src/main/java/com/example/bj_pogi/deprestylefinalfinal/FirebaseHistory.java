@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
@@ -21,22 +22,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class FirebaseHistory extends AppCompatActivity {
 
     ListView historylv;
+    FloatingActionButton fab;
+    private TextView tv_score, tv_result, tv_date, tv_time;
+
+
     FirebaseListAdapter adapter;
     FirebaseUser currentUser;
-    private TextView tv_score, tv_result, tv_date, tv_time;
     DatabaseReference mRef;
 
-    ControllerClass mController = new ControllerClass();
+
+    ControllerClass mUtils;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase_history);
+        mUtils = new ControllerClass(this);
 
         //custom toolbar
         TextView customTV = (TextView) findViewById(R.id.customTV);
@@ -132,12 +144,12 @@ public class FirebaseHistory extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()){
                                                             mRef.removeValue();
-                                                            mController.makeToastMsg(FirebaseHistory.this, "A result has been removed :(");
+                                                            mUtils.makeToastMsg(FirebaseHistory.this, "A result has been removed :(");
 
                                                         }
                                                         else{
                                                             String exceptionn = task.getException().toString();
-                                                            mController.makeToastMsg(FirebaseHistory.this, exceptionn);
+                                                            mUtils.makeToastMsg(FirebaseHistory.this, exceptionn);
                                                         }
                                                     }
                                                 });
@@ -155,11 +167,33 @@ public class FirebaseHistory extends AppCompatActivity {
         });
 
         //go to before test
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.mainFab);
+        fab = (FloatingActionButton) findViewById(R.id.mainFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FirebaseHistory.this, BeforeTestActivity.class));
+                Calendar c = Calendar.getInstance();
+                String n = mUtils.getSessionData(Constants.NXTDATE);
+                String cur = DateFormat.getDateInstance(DateFormat.LONG).format(c.getTime());
+
+                if(!mUtils.isNullOrEmpty(n)){
+                    try{
+                        SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+                        Date date1 = format.parse(cur);
+                        Date date2 = format.parse(n);
+                        if(n.equals(cur) || date1.compareTo(date2) > 0){
+                            startActivity(new Intent(FirebaseHistory.this, BeforeTestActivity.class));
+                        } else {
+                            String mDate = Constants.NEXT_TEST + n + Constants.NEXT_TEST2;
+                            mUtils.showAlertDialog(FirebaseHistory.this, Constants.OOPS, R.drawable.ic_warning,
+                                    mDate, true, Constants.GOT_IT);
+                        }
+
+                    } catch (ParseException e){
+                        e.printStackTrace();
+                    }
+                } else {
+                    startActivity(new Intent(FirebaseHistory.this, BeforeTestActivity.class));
+                }
             }
         });
     }

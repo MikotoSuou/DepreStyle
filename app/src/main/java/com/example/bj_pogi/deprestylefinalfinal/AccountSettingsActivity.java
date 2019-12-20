@@ -37,12 +37,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
 
-    ControllerClass mController = new ControllerClass();
+    ControllerClass mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
+        mUtils = new ControllerClass(this);
 
         //custom toolbar
         TextView customTV = (TextView) findViewById(R.id.customTV);
@@ -89,26 +90,26 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 });
                 //check et if null
                 final String email = tvAccEmail.getText().toString();
-                if(!mController.isNullOrEmpty(email)){
+                if(!mUtils.isNullOrEmpty(email)){
                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
 
                             if(task.isSuccessful()){
                                 String message = "Request for change password is sent to " + email + " you won't be able to request again for the next 5 minutes";
-                                mController.showAlertDialog(AccountSettingsActivity.this, Constants.CHANGE_PASS, R.drawable.ic_changepass,
+                                mUtils.showAlertDialog(AccountSettingsActivity.this, Constants.CHANGE_PASS, R.drawable.ic_changepass,
                                         message, true, Constants.CLOSE);
                             }
                             else {
-                                String msg = mController.removeFirebaseExceptionMsg(task.getException().getMessage());
-                                mController.makeToastMsg(AccountSettingsActivity.this, msg);
+                                String msg = mUtils.removeFirebaseExceptionMsg(task.getException().getMessage());
+                                mUtils.makeToastMsg(AccountSettingsActivity.this, msg);
                             }
 
                         }
                     });
                 }
                 else{
-                    mController.showSnackBarShortly(v, Constants.SOMETHING_WENT_WRONG);
+                    mUtils.showSnackBarShortly(v, Constants.SOMETHING_WENT_WRONG);
                 }
 
                 new Handler().postDelayed(new Runnable() {

@@ -149,7 +149,7 @@
     <string name="connectinfo4">• <b>Use online support.</b> Online support can be a useful way to build a support network when you cannot, or don\'t feel able to, do things in person. Online forums like <a href="https://www.elefriends.org.uk/">Elefriends</a> and <a href="https://www.bigwhitewall.com/V2/LandingV2.aspx">Big White Wall</a> are specifically for anyone struggling with their mental health</string>
     <string name="two_weeks">In the last two weeks how do you feel...</string>
     <string name="history">History</string>
-    <string name="btinfo1">DepreStyle uses Beck Depression Inventory (BDI) as its screening test.<a href="http://www.minddisorders.com/A-Br/Beck-Depression-Inventory.html"> About BDI </a></string>
+    <string name="btinfo1">DepreStyle uses Beck Depression Inventory (BDI) as its screening test. <a href="http://www.minddisorders.com/A-Br/Beck-Depression-Inventory.html">About BDI</a></string>
     <string name="btinfo2">Instructions:</string>
     <string name="btinfo3">1.) Proceeding to the test, you will be given a 21 self-administered questions that can be answered between 5 and 10 minutes</string>
     <string name="btinfo4">2.) Each question is designed to assess a specific symptom common among people with depression</string>

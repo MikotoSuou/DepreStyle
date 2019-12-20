@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,16 +54,16 @@ public class HomeActivity extends AppCompatActivity implements
     protected FirebaseUser currentUser;
     private DatabaseReference mUserDatabase;
 
-    ControllerClass mController = new ControllerClass();
+    ControllerClass mUtils;
     final Quotes mQuotes = new Quotes();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mUtils = new ControllerClass(this);
         setNavigationViewListner();
         checkNetworkConnectionStatus();
-//        checkUser();
 
         //home toolbar
         home_toolbar = (Toolbar) findViewById(R.id.home_toolbar);
@@ -117,6 +118,8 @@ public class HomeActivity extends AppCompatActivity implements
                         tvLname.setText(lname);
                         tvEmail.setText(email);
                         tvNextDate.setText(next);
+
+                        makeNextDateData();
                     }
 
                     else{
@@ -155,32 +158,25 @@ public class HomeActivity extends AppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.startBtn:
-                //startActivity(new Intent(HomeActivity.this, BeforeTestActivity.class));
                 try{
-
                    SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
-
                    String c = tvCurrentDate.getText().toString();
                    Date date1 = format.parse(c);
-
                    String n = tvNextDate.getText().toString();
                    Date date2 = format.parse(n);
 
-
-                    if(mController.isNullOrEmpty(n) || date1.compareTo(date2) > 0 || n.equals(c)){
-                        startIntent = new Intent(getApplicationContext(), BeforeTestActivity.class);
-                        //dashboard -> questions
-                        startActivity(startIntent);
+                    if(mUtils.isNullOrEmpty(n) || date1.compareTo(date2) > 0 || n.equals(c)){
+                        startActivity(new Intent(HomeActivity.this, BeforeTestActivity.class));
                     }
                     else {
-                        String mDate = Constants.NEXT_TEST + tvNextDate.getText().toString();
-                        mController.showAlertDialog(HomeActivity.this, Constants.OOPS, R.drawable.ic_warning,
-                                mDate, true, Constants.OK);
+                        String mDate = Constants.NEXT_TEST + n + Constants.NEXT_TEST2;
+                        mUtils.showAlertDialog(HomeActivity.this, Constants.OOPS, R.drawable.ic_warning,
+                                mDate, true, Constants.GOT_IT);
                     }
 
                 }catch (ParseException e1){
                     Log.i("UNHANDLED DATE : ", e1.getMessage());
-                    mController.makeToastMsg(HomeActivity.this, Constants.PLS_WAIT);
+                    mUtils.makeToastMsg(HomeActivity.this, Constants.PLS_WAIT);
                 }
 
                 break;
@@ -322,8 +318,15 @@ public class HomeActivity extends AppCompatActivity implements
             }
 
         } else {
-            mController.showAlertDialogWhenNoInternet(HomeActivity.this);
+            mUtils.showAlertDialogWhenNoInternet(HomeActivity.this);
         }
+    }
+
+
+    private void makeNextDateData(){
+        String date = tvNextDate.getText().toString();
+        if(!mUtils.isNullOrEmpty(date))
+            mUtils.setSessionData(Constants.NXTDATE, tvNextDate.getText().toString());
     }
 
     private void checkUser(){

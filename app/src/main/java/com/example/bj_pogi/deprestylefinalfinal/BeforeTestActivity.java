@@ -37,10 +37,13 @@ public class BeforeTestActivity extends AppCompatActivity {
     protected FirebaseUser currentUser;
     private DatabaseReference mUserDatabase;
 
+    ControllerClass mUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_before_test);
+        mUtils = new ControllerClass(this);
 
         //custom toolbar
         TextView customTV = (TextView) findViewById(R.id.customTV);
@@ -80,7 +83,6 @@ public class BeforeTestActivity extends AppCompatActivity {
 
                 tvNextDate.setText(next);
                 try{
-
                     SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
 
                     String c2 = tvCurrentDate.getText().toString();
@@ -89,17 +91,14 @@ public class BeforeTestActivity extends AppCompatActivity {
                     String n = tvNextDate.getText().toString();
                     Date date2 = format.parse(n);
 
-
-                if(tvNextDate.getText().toString().isEmpty() || date1.compareTo(date2) > 0 || tvNextDate.getText().toString().equals(tvCurrentDate.getText().toString())){
-                    System.out.print("Read!!!");
-                }
-                else {
-                    //startActivity(new Intent(BeforeTestActivity.this, HomeActivity.class));
-                    finish();
-                }
+                    if(mUtils.isNullOrEmpty(n) || date1.compareTo(date2) > 0 || n.equals(c2)){
+                        System.out.print("Read!!!");
+                    } else {
+                        finish();
+                    }
 
                 }catch (ParseException e1){
-                    Toast.makeText(BeforeTestActivity.this, e1.getMessage(), Toast.LENGTH_SHORT).show();
+                    e1.printStackTrace();
                 }
 
             }
@@ -109,10 +108,6 @@ public class BeforeTestActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
 
 
 

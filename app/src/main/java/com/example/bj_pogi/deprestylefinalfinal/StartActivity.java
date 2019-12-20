@@ -46,14 +46,14 @@ public class StartActivity extends AppCompatActivity {
     private FirebaseUser mUser;
 
     //CLASS
-    ControllerClass mController = new ControllerClass();
+    ControllerClass mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         checkNetworkConnectionStatus();
-
+        mUtils = new ControllerClass(this);
         mAuth = FirebaseAuth.getInstance();
 
         etUserEmail = (EditText) findViewById(R.id.etUserEmail);
@@ -81,8 +81,8 @@ public class StartActivity extends AppCompatActivity {
                 String email = etUserEmail.getEditableText().toString();
                 String password = etUserPass.getText().toString();
 
-                if(mController.isNullOrEmpty(email) || mController.isNullOrEmpty(password)){
-                    mController.makeToastMsg(StartActivity.this, Constants.FILL_UP_USR_AND_PASS);
+                if(mUtils.isNullOrEmpty(email) || mUtils.isNullOrEmpty(password)){
+                    mUtils.makeToastMsg(StartActivity.this, Constants.FILL_UP_USR_AND_PASS);
                 }
                 else{
                     mLoginProgress.setTitle(Constants.LOGGING_IN);
@@ -167,19 +167,19 @@ public class StartActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-                                mController.makeToastMsg(StartActivity.this, databaseError.getMessage());
+                                mUtils.makeToastMsg(StartActivity.this, databaseError.getMessage());
                             }
                         });
 
                     } else{
-                        mController.makeToastMsg(StartActivity.this, Constants.PLS_VERIFY_EMAIL_ADD);
+                        mUtils.makeToastMsg(StartActivity.this, Constants.PLS_VERIFY_EMAIL_ADD);
 
                     }
 
                 } else{
                     mLoginProgress.hide();
-                    String msg = mController.removeFirebaseExceptionMsg(task.getException().getMessage());
-                    mController.makeToastMsg(StartActivity.this, msg);
+                    String msg = mUtils.removeFirebaseExceptionMsg(task.getException().getMessage());
+                    mUtils.makeToastMsg(StartActivity.this, msg);
 
                 }
 
@@ -204,7 +204,7 @@ public class StartActivity extends AppCompatActivity {
             }
 
         } else {
-            mController.showAlertDialogWhenNoInternet(StartActivity.this);
+            mUtils.showAlertDialogWhenNoInternet(StartActivity.this);
         }
     }
 
@@ -214,6 +214,22 @@ public class StartActivity extends AppCompatActivity {
             Intent intent = new Intent(StartActivity.this, HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        } else {
+            //handle if no user
+        }
+    }
+
+    private void checkForEmailVerification() {
+        String emailMsg = mUtils.getSessionData(Constants.VERMSG);
+        String mChecker = mUtils.getSessionData(Constants.EVSUCC);
+
+        if(!mUtils.isNullOrEmpty(emailMsg) && !mUtils.isNullOrEmpty(mChecker) && mChecker.equals("1")){
+
+            mUtils.showAlertDialog(StartActivity.this, Constants.VERIFICATION_TITLE, R.drawable.ic_email,
+                    emailMsg, false, Constants.OKAY);
+
+            mUtils.deleteSessionData(Constants.VERMSG);
+            mUtils.deleteSessionData(Constants.EVSUCC);
         }
     }
 
@@ -223,6 +239,7 @@ public class StartActivity extends AppCompatActivity {
         super.onStart();
         checkNetworkConnectionStatus();
         checkUser();
+        checkForEmailVerification();
     }
 
 

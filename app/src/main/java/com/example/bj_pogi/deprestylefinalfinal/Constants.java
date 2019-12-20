@@ -8,11 +8,13 @@ public class Constants {
     public static final String ABOUT = "About";
     public static final String BACK = "Back";
     public static final String CLOSE = "Close";
+    public static final String GOT_IT = "Got it";
     public static final String NEXT = "Next";
     public static final String OK = "OK";
     public static final String OKAY = "Okay";
     public static final String OOPS = "Oops!";
-    public static final String NEXT_TEST = "Your next test will be available after 2 weeks, ";
+    public static final String NEXT_TEST = "Your next test will be available after 2 weeks (";
+    public static final String NEXT_TEST2 = "). \n\nMeanwhile explore DepreStyle to keep your mind off things. Keep yourself busy buddy!";
 
 
     //ACCOUNT SETTINGS
@@ -26,13 +28,19 @@ public class Constants {
     public static final String DR_RIZAL = "Jose Rizal";
 
 
+    //SESSION KEYS
+    public static final String EVSUCC = "EVSUCC";
+    public static final String NXTDATE = "NEXTDATE";
+    public static final String VERMSG = "VERMSG";
+
+
     //ERROR MESSAGES
     public static final String ACC_DISABLED = "Account Disabled";
     public static final String COMPLETE_FORM = "Form must be complete";
     public static final String FILL_UP_USR_AND_PASS = "Fill up username and password";
     public static final String PASS_SHOULD_HAVE_6_CHAR = "Password must have at least 6 characters.";
     public static final String PASS_NOT_EQUAL = "Password does not match.";
-    public static final String SOMETHING_WENT_WRONG = "Something went wrong.";
+    public static final String SOMETHING_WENT_WRONG = "Something went wrong please try again later.";
 
 
     //LOGIN
@@ -43,6 +51,7 @@ public class Constants {
 
     //SIGNUP
     public static final String EMAIL_VERIFICATION = "Verification will be sent to your email";
+    public static final String VERIFICATION_TITLE = "Email Verification";
     public static final String REGISTERING = "Registering...";
 
 

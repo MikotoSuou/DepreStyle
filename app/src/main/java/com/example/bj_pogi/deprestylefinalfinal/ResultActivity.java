@@ -8,7 +8,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -51,18 +54,24 @@ public class ResultActivity extends AppCompatActivity {
 
     private static final int STORAGE_CODE = 200;
     TextView TextViewScore, TextViewResult, TextViewLifestyle, TextViewLifestyle2, TextViewResultInfo, tvNameContainer;
-    Button createReportBtn, homeBtn, etDate, etTime;
+    Button btnCreateReport, btnHome, etDate, etTime;
     String currentDate, currentTime;
     String score;
     int d;
 
+
     private DatabaseReference mAccountDatabase, mAccountInformation;
     private FirebaseUser mCurrentUser;
+
+
+    ControllerClass mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        mUtils = new ControllerClass(this);
 
         TextViewScore = (TextView) findViewById(R.id.TextViewScore);
         TextViewResult = (TextView) findViewById(R.id.TextViewResult);
@@ -70,8 +79,8 @@ public class ResultActivity extends AppCompatActivity {
         TextViewLifestyle = (TextView) findViewById(R.id.TextViewLifestyle);
         TextViewLifestyle2 = (TextView) findViewById(R.id.TextViewLifestyle2);
         tvNameContainer = (TextView) findViewById(R.id.tvNameContainer);
-        createReportBtn = (Button) findViewById(R.id.createReportBtn);
-        homeBtn = (Button) findViewById(R.id.homeBtn);
+        btnCreateReport = (Button) findViewById(R.id.btnCreateReport);
+        btnHome = (Button) findViewById(R.id.btnHome);
         etDate = (Button) findViewById(R.id.etDate);
         etTime = (Button) findViewById(R.id.etTime);
 
@@ -160,29 +169,6 @@ public class ResultActivity extends AppCompatActivity {
             TextViewLifestyle.setText(y);
         }
 
-
-        //button for create result
-        createReportBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
-                    if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                            requestPermissions(permissions, STORAGE_CODE);
-                    }
-                    else{
-                        savePdf();
-                        sendData();
-                    }
-                }
-                else{
-                    savePdf();
-                    sendData();
-                }
-            }
-        });
-
-
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_uid = mCurrentUser.getUid();
 
@@ -213,12 +199,37 @@ public class ResultActivity extends AppCompatActivity {
         });
 
 
-        homeBtn.setOnClickListener(new View.OnClickListener() {
+        btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendData();
+                finish();
             }
         });
+
+        //button for create result
+        btnCreateReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M){
+                    if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permissions, STORAGE_CODE);
+                    }
+                    else{
+                        savePdf();
+                        sendData();
+                        disableButtons();
+                    }
+                }
+                else{
+                    savePdf();
+                    sendData();
+                    disableButtons();
+                }
+            }
+        });
+
     }
 
     private void sendData() {
@@ -232,7 +243,7 @@ public class ResultActivity extends AppCompatActivity {
         String date = etDate.getText().toString();
         String time = etTime.getText().toString();
 
-        if (score.length() != 0) {
+        if (score.length() != 0 && !mUtils.isNullOrEmpty(score)) {
             HashMap<String, String> historyMap = new HashMap<>();
             historyMap.put("score", score);
             historyMap.put("result", result);
@@ -248,11 +259,9 @@ public class ResultActivity extends AppCompatActivity {
                         TextViewScore.setText("");
                         TextViewResult.setText("");
 
-                        finish();
-
                     } else {
-
-                        Toast.makeText(ResultActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        String msg = mUtils.removeFirebaseExceptionMsg(task.getException().toString());
+                        mUtils.makeToastMsg(ResultActivity.this, msg);
 
                     }
                 }
@@ -373,17 +382,47 @@ public class ResultActivity extends AppCompatActivity {
             //close document
             document.close();
 
-            File file = new File(mFileLocation + mFileName);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-            Toast.makeText(this, mFileName + ".pdf \n is saved to \n " + mFileLocation, Toast.LENGTH_SHORT).show();
+//            final File file = new File(mFileLocation, mFileName);
+            final File file = new File(mFileLocation);
+
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//            startActivity(intent);
+//            Toast.makeText(this, mFileName + ".pdf \n is saved to \n " + mFileLocation, Toast.LENGTH_SHORT).show();
+
+            View parentLayout = findViewById(android.R.id.content);
+            Snackbar.make(parentLayout, mFileName + ".pdf is saved to " + mFileLocation, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.open, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openReport(file);
+                            finish();
+                        }
+                    })
+                    .show();
+
         }
         catch (Exception e){
-            //catch error
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
+    }
+
+
+    public void openReport(File report){
+        Intent intent = new Intent();
+        Uri uri = FileProvider.getUriForFile(ResultActivity.this, "com.example.bj_pogi.deprestylefinalfinal.fileprovider", report);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, report);
+        intent.setAction(Intent.ACTION_VIEW);
+        startActivity(intent);
+    }
+
+
+    private void disableButtons(){
+        btnHome.setEnabled(false);
+        btnCreateReport.setEnabled(false);
     }
 
     @Override

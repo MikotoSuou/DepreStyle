@@ -47,12 +47,13 @@ public class UpdateActivity extends AppCompatActivity implements
     private FirebaseUser mCurrentUser;
 
     //CLASS
-    ControllerClass mController = new ControllerClass();
+    ControllerClass mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+        mUtils = new ControllerClass(this);
 
         //custom toolbar
         TextView customTV = (TextView) findViewById(R.id.customTV);
@@ -141,8 +142,8 @@ public class UpdateActivity extends AppCompatActivity implements
                         }
                         else{
                             try{
-                                String exceptionn = mController.removeFirebaseExceptionMsg(task.getException().toString());
-                                mController.makeToastMsg(UpdateActivity.this, exceptionn);
+                                String exceptionn = mUtils.removeFirebaseExceptionMsg(task.getException().toString());
+                                mUtils.makeToastMsg(UpdateActivity.this, exceptionn);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
